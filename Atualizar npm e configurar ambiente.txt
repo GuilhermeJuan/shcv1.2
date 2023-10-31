@@ -1,0 +1,60 @@
+Antes de tudo atualize o node executando o node.msi que está nesta pasta e posteriormente atualize o npm, abrindo o terminal e executando o comando abaixo:
+npm install -g npm@latest
+
+1) Criando um novo projeto
+expo init NomeApp
+
+2) Entrando no projeto
+	cd NomeApp
+
+3) Envie seu projeto para o GitHub
+	Antes de tudo configure seu user do git. Abra o terminal e digite: 
+		git config --global user.name "Fulano de Tal"
+		git config --global user.email fulanodetal@exemplo.br
+	
+	Entre no GitHub e crie um “New repositor” com o nome_desejado
+	
+	Envie o projeto para o repositório criado, executando os seguintes comandos
+		git add .
+		git commit -m "Base para o projeto"
+		git branch -M master
+		git remote add origin https://github.com/Seu_User_Git/nome_desejado.git  -- Este aqui é o diretório do seu repositório.
+		git push -u origin master
+
+
+4) Instale as bibliotecas necessárias para testar o App no navegador; 
+	npm install react-native-web react-dom @expo/webpack-config
+
+5) Instalando bibliotecas de suporte à navegação
+	npm install @react-navigation/native
+
+6) Instalando bibliotecas de suporte a cada tipo especifico de navegação
+	npm install @react-navigation/bottom-tabs
+
+7) Agora instale o react-native-async-storage.  
+    npm install @react-native-async-storage/async-storage
+    npm install parse
+
+8) Adicionando os components que serão nossas telas de navegação;
+    components
+        :-cadastrar
+        :   ->index.jsx
+        :-consultar
+        :   ->index.jsx
+
+9) Adicione a seguinte configuração em sua App.js
+
+	import Parse from "parse/react-native.js";
+	import AsyncStorage from '@react-native-async-storage/async-storage';
+
+	Parse.setAsyncStorage(AsyncStorage);
+
+	**OBS: Na Dashboard do back4app, vá até: App Settings -> Security & Keys: Copie a Application ID e JavaScript key para colar na linha abaixo.**
+
+	Parse.initialize('YOUR_APPLICATION_ID_HERE','YOUR_JAVASCRIPT_KEY_HERE');
+	Parse.serverURL = 'https://parseapi.back4app.com/';
+
+10) Enviando atualização feita para o GitHub:
+	git add .
+	git commit -m "Ambiente preparado"
+	git push
