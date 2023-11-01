@@ -19,7 +19,7 @@ export default function Login({ navigation }){
 
             <Text style={styles.title}>Senha</Text>
             <TextInput
-                placeholder="sua sennha porra..."
+                placeholder="sua sennha..."
                 style={styles.input}
             />
 

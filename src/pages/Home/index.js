@@ -8,7 +8,7 @@ import * as Animatable from 'react-native-animatable';
 
 const Home = ({ navigation }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(true); // Defina como `false` se o usuário não estiver logado
-  const userName = "Nome do Usuário"; // Substitua pelo nome real do usuário se estiver logado
+  const userName = "Thales Juan"; // Substitua pelo nome real do usuário se estiver logado
 
   const [optionsVisible, setOptionsVisible] = useState(false);
 
@@ -29,6 +29,8 @@ const Home = ({ navigation }) => {
   const handleVerAgenda = () => {
     // Lógica para ver a agenda
     alert('Ver Agenda');
+
+    navigation.navigate('Agenda')
   };
 
   const handleSair = () => {
@@ -43,7 +45,7 @@ const Home = ({ navigation }) => {
       {/* Saudação no canto superior esquerdo */}
       <View style={styles.greetingContainer}>
         <Text style={styles.greetingText}>
-          Olá, {isLoggedIn ? `${userName},` : 'bem vindo(a)'}
+          Olá, {isLoggedIn ? `${userName}` : 'bem vindo(a)'}
         </Text>
       </View>
 
