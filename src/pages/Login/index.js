@@ -23,12 +23,12 @@ export default function Login({ navigation }){
                 style={styles.input}
             />
 
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Home')}>
                 <Text style={styles.buttonText}>Acessar</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.buttonBack} onPress={() => navigation.navigate('Welcome')}>
-                <Text style={styles.buttonTextBack}>Voltar</Text>
+            <TouchableOpacity style={styles.buttonGoHome} onPress={() => navigation.navigate('Home')}>
+                <Text style={styles.buttonTextBack}>Não quero me cadastrat agora!</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.buttonRegister}>
@@ -94,7 +94,7 @@ buttonRegister:{
 registerText:{
     color: '#a1a1a1'
 },
-buttonBack:{
+buttonGoHome:{
     backgroundColor:'#38a69d',
     width: '100%',
     borderRadius: 4,
