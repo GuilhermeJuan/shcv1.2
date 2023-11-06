@@ -12,37 +12,34 @@ import * as Animatable from 'react-native-animatable'
 import {useNavigation} from '@react-navigation/native'
 
 
-export default function Welcome(){
-      const navigation = useNavigation();
+export default function Welcome() {
+    const navigation = useNavigation();
     return (
-    <View style={styles.container}> 
+        <View style={styles.container}>
+            <View style={styles.containerLogo}>
+                <Animatable.Image
+                    animation="flipInY"
+                    source={require('../../../assets/IMG-R (11).jpg')}
+                    style={styles.logoImage}
+                    resizeMode="contain"
+                />
+            </View>
 
-        <View style={styles.containerLogo}>
-            <Animatable.Image
-                animation="flipInY"
-                source={require('../../../assets/IMG-R (11).jpg')}
-                style={{width:'100%'}}
-                resizeMode="contain"
-            />
+            <Animatable.View delay={600} animation="fadeInUp" style={styles.containerForm}>
+                <Text style={styles.title}>Monitore, gerencie e organize seus medicamentos aqui</Text>
+                <Text style={styles.text}>Faça o Login para começar</Text>
+
+                <TouchableOpacity 
+                    style={styles.button}
+                    onPress={() => navigation.navigate('Login')}
+                >
+                    <Text style={styles.buttonText}>Acessar</Text>
+                </TouchableOpacity>
+            </Animatable.View>
         </View>
-
-
-
-        <Animatable.View delay={600} animation="fadeInUp" style={styles.containerForm}>
-            <Text style={styles.title}>Monitore, gerencie e organize seus medicamentos aqui</Text>
-            <Text style={styles.text}>Faça o Login para começar</Text>
-
-            <TouchableOpacity 
-            style={styles.button}
-            onPress={ () => navigation.navigate('Login')}
-            >
-                <Text style={styles.buttonText}>Acessar</Text>
-            </TouchableOpacity>
-        </Animatable.View>
-
-    </View>
     );
 }
+
 
 
 const styles = StyleSheet.create({
@@ -88,5 +85,11 @@ const styles = StyleSheet.create({
         fontSize: 18,
         color: '#FFF',
         fontWeight:'bold'
-    }
+    },
+    logoImage: {
+        width: 200, // Defina a largura da imagem conforme necessário
+        height: 200, // Defina a altura da imagem conforme necessário
+        borderRadius: 100, // Faz a imagem aparecer redonda
+        resizeMode:"contain"
+    },
 })

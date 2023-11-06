@@ -1,85 +1,84 @@
 import React, { useState } from 'react';
-import { View, 
-        TouchableOpacity, 
-        Text, 
-        StyleSheet } from 'react-native';
-
+import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
+import Modal from 'react-native-modal';
+import LinearGradient from 'expo-linear-gradient';
 import * as Animatable from 'react-native-animatable';
 
 const Home = ({ navigation }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(true); // Defina como `false` se o usuário não estiver logado
-  const userName = "Thales Juan"; // Substitua pelo nome real do usuário se estiver logado
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const userName = "Thales Juan";
 
-  const [optionsVisible, setOptionsVisible] = useState(false);
-
-  const toggleOptions = () => {
-    setOptionsVisible(!optionsVisible);
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
   };
 
-  const handleAddRemedio = () => {
-    // Lógica para adicionar lembrete de remédio
-    alert('Adicionar Lembrete de Remédio');
+  const handleMenuItemPress = (item) => {
+    if (item.key === 'remedio') {
+      alert('Adicionar Lembrete de Remédio');
+
+    } else if (item.key === 'paciente') {
+      alert('Adicionar Paciente');
+
+    } else if (item.key === 'agenda') {
+      alert('Ver Agenda');
+      navigation.navigate('Agenda');
+      
+    } else if (item.key === 'sair') {
+      setIsLoggedIn(false);
+      navigation.navigate('Login');
+    }
+
+    setModalVisible(false);
   };
 
-  const handleAddPaciente = () => {
-    // Lógica para adicionar paciente
-    alert('Adicionar Paciente');
-  };
-
-  const handleVerAgenda = () => {
-    // Lógica para ver a agenda
-    alert('Ver Agenda');
-
-    navigation.navigate('Agenda')
-  };
-
-  const handleSair = () => {
-    // Lógica para deslogar o usuário
-    setIsLoggedIn(false);
-    // Navegar de volta para a tela de login
-    navigation.navigate('Login');
-  };
+  const data = [
+    { key: 'remedio', label: 'Adicionar Lembrete de Remédio' },
+    { key: 'paciente', label: 'Adicionar Paciente' },
+    { key: 'agenda', label: 'Ver Agenda' },
+    { key: 'sair', label: 'Sair' },
+  ];
 
   return (
     <View style={styles.container}>
-      {/* Saudação no canto superior esquerdo */}
       <View style={styles.greetingContainer}>
         <Text style={styles.greetingText}>
           Olá, {isLoggedIn ? `${userName}` : 'bem vindo(a)'}
         </Text>
       </View>
 
-      {/* Conteúdo da tela Home */}
-      {/* ... */}
+      <Animatable.View animation="flipInY"> {/* Adicione a animação de flip aqui */}
+        <Image
+          source={require('../../../assets/IMG-R (10).jpg')} // Certifique-se de fornecer o caminho correto para a sua imagem
+          style={styles.image}
+        />
+      </Animatable.View>
 
-      {/* Botão redondo animado no canto direito inferior */}
-      <TouchableOpacity style={styles.addButton} onPress={toggleOptions}>
-        <Text style={styles.buttonText}>+</Text>
+      <TouchableOpacity style={styles.addButton} onPress={toggleModal}>
+        <FontAwesome name="plus" size={30} color="white" />
       </TouchableOpacity>
 
-      {/* Opções animadas */}
-      <Animatable.View
-        animation={optionsVisible ? 'fadeInDown' : 'fadeOutUp'}
-        duration={500}
-        style={optionsVisible ? styles.optionsContainer : styles.hiddenOptionsContainer}
+      <Modal
+        isVisible={isModalVisible}
+        onBackdropPress={toggleModal}
+        backdropOpacity={0.5}
+        animationIn="slideInUp"
+        animationOut="slideOutDown"
       >
-        <TouchableOpacity style={styles.optionButton} onPress={handleAddRemedio}>
-          <Text style={styles.optionButtonText}>Adicionar Lembrete de Remédio</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.optionButton} onPress={handleAddPaciente}>
-          <Text style={styles.optionButtonText}>Add. Paciente</Text>
-        </TouchableOpacity>
-        {isLoggedIn && (
-          <>
-            <TouchableOpacity style={styles.optionButton} onPress={handleVerAgenda}>
-              <Text style={styles.optionButtonText}>Ver Agenda</Text>
+        <View style={styles.modalContainer}>
+          <Text style={styles.modalTitle}>Escolha uma opção:</Text>
+          {data.map((item) => (
+            <TouchableOpacity
+              key={item.key}
+              style={styles.optionButton}
+              onPress={() => handleMenuItemPress(item)}
+            >
+              <Text style={styles.optionButtonText}>{item.label}</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.optionButton} onPress={handleSair}>
-              <Text style={styles.optionButtonText}>Sair</Text>
-            </TouchableOpacity>
-          </>
-        )}
-      </Animatable.View>
+          ))}
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -89,6 +88,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#fff',
   },
   greetingContainer: {
     position: 'absolute',
@@ -100,33 +100,26 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   addButton: {
-    position: 'absolute',
-    bottom: 20,
-    right: 20,
+    backgroundColor: '#007bff',
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: 'red',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  buttonText: {
-    fontSize: 30,
-    fontWeight: 'bold',
-    color: 'white',
-  },
-  optionsContainer: {
     position: 'absolute',
-    bottom: 90,
+    bottom: 20,
     right: 20,
-    width: 200,
-    backgroundColor: 'white',
-    borderRadius: 10,
-    elevation: 5,
-    padding: 10,
   },
-  hiddenOptionsContainer: {
-    display: 'none',
+  modalContainer: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 20,
   },
   optionButton: {
     paddingVertical: 8,
@@ -134,6 +127,12 @@ const styles = StyleSheet.create({
   optionButtonText: {
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  image: {
+    width: 200, // Defina a largura da imagem conforme necessário
+    height: 200, // Defina a altura da imagem conforme necessário
+    resizeMode: 'cover', // Ou use 'contain' para outro tipo de redimensionamento
+    marginBottom: 20, // Adapte a margem inferior conforme necessário
   },
 });
 
