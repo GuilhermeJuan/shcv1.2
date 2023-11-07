@@ -33,5 +33,6 @@ export default function App() {
 // git init (em uma maquina diferente)
 // git add .
 // git commit -a -m "..."
-// git push origin master
+// git push origin master 
+// a
 
