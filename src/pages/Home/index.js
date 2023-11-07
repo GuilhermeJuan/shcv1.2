@@ -27,7 +27,7 @@ const Home = ({ navigation }) => {
       
     } else if (item.key === 'sair') {
       setIsLoggedIn(false);
-      navigation.navigate('Login');
+      navigation.navigate('Welcome');
     }
 
     setModalVisible(false);

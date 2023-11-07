@@ -27,7 +27,7 @@ export default function Welcome() {
 
             <Animatable.View delay={600} animation="fadeInUp" style={styles.containerForm}>
                 <Text style={styles.title}>Monitore, gerencie e organize seus medicamentos aqui</Text>
-                <Text style={styles.text}>Faça o Login para começar</Text>
+                <Text style={styles.text}>Faça o Login para começar! 😉</Text>
 
                 <TouchableOpacity 
                     style={styles.button}
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     },
     containerLogo:{
         flex:2,
-        backgroundColor: '#38a69d',
+        backgroundColor: '#0b203d',
         justifyContent: 'center',
         alignItems: 'center'
     },
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     },
     button:{
         position: 'absolute',
-        backgroundColor: '#38a69d',
+        backgroundColor: '#0b203d',
         borderRadius: 50,
         paddingVertical: 8,
         width: '60%',
@@ -90,6 +90,6 @@ const styles = StyleSheet.create({
         width: 200, // Defina a largura da imagem conforme necessário
         height: 200, // Defina a altura da imagem conforme necessário
         borderRadius: 100, // Faz a imagem aparecer redonda
-        resizeMode:"contain"
+        
     },
 })

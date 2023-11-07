@@ -28,8 +28,10 @@ export default function App() {
 // npx expo install expo-linear-gradient
 // npx expo install react-native-linear-gradient
 //ATUILIZAR PROJETO NO GIT:
+// git config --global user.email "guilhermelima156@outlook.com" (em uma maquina diferente)
+// git config --global user.name "GuilhermeJuan" (em uma maquina diferente)
+// git init (em uma maquina diferente)
 // git add .
 // git commit -a -m "..."
 // git push origin master
-
 

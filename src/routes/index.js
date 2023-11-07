@@ -4,6 +4,7 @@ import Welcome from "../pages/Welcome";
 import Login from "../pages/Login";
 import Home from "../pages/Home";
 import Agenda from "../pages/TelaAgenda";
+import Register from "../pages/TelaRegister";
 
 const Stack = createNativeStackNavigator();
 
@@ -28,6 +29,11 @@ export default function Routes(){
             <Stack.Screen
                 name="Agenda"
                 component={Agenda}
+                options={{ headerShown: false }}
+            />
+            <Stack.Screen
+                name="Register"
+                component={Register}
                 options={{ headerShown: false }}
             />
         </Stack.Navigator>
