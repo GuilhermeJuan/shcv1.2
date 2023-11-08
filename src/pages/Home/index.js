@@ -16,7 +16,8 @@ const Home = ({ navigation }) => {
 
   const handleMenuItemPress = (item) => {
     if (item.key === 'remedio') {
-      alert('Adicionar Lembrete de Remédio');
+      alert('Adicionar Medicamentos');
+      navigation.navigate('GerenciamentoMedicamentos')
 
     } else if (item.key === 'paciente') {
       alert('Adicionar Paciente');
@@ -34,7 +35,7 @@ const Home = ({ navigation }) => {
   };
 
   const data = [
-    { key: 'remedio', label: 'Adicionar Lembrete de Remédio' },
+    { key: 'remedio', label: 'Adicionar medicamnetos' },
     { key: 'paciente', label: 'Adicionar Paciente' },
     { key: 'agenda', label: 'Ver Agenda' },
     { key: 'sair', label: 'Sair' },

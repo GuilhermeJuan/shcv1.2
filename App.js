@@ -27,6 +27,10 @@ export default function App() {
 // npm install react-native-modal
 // npx expo install expo-linear-gradient
 // npx expo install react-native-linear-gradient
+// npm install react-native-modal-datetime-picker
+// npm install react-native-image-picker
+
+
 //ATUILIZAR PROJETO NO GIT:
 // git config --global user.email "guilhermelima156@outlook.com" (em uma maquina diferente)
 // git config --global user.name "GuilhermeJuan" (em uma maquina diferente)
