@@ -29,6 +29,8 @@ export default function App() {
 // npx expo install react-native-linear-gradient
 // npm install react-native-modal-datetime-picker
 // npm install react-native-image-picker
+// npm install react-native-lottie
+
 
 
 //ATUILIZAR PROJETO NO GIT:

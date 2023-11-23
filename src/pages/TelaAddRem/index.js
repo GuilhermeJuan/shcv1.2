@@ -1,76 +1,128 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, Switch } from 'react-native';
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import { FontAwesome5 } from '@expo/vector-icons';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, Picker } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
+import Constants from 'expo-constants';
 
 const AddMedication = ({ navigation }) => {
   const [medicationName, setMedicationName] = useState('');
-  const [currentQuantity, setCurrentQuantity] = useState('');
-  const [isReminderEnabled, setIsReminderEnabled] = useState(false);
-  const [reminderTime, setReminderTime] = useState(new Date());
-  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [dosage, setDosage] = useState('');
+  const [day, setDay] = useState('');
+  const [time, setTime] = useState('');
+  const [stock, setStock] = useState(0);
+  const [image, setImage] = useState('');
+  const [imageSource, setImageSource] = useState(null);
+  const [selectedOption, setSelectedOption] = useState('image');
 
-  const showDatePicker = () => {
-    setDatePickerVisibility(true);
+  const handleSubmit = () => {
+    const medication = { name: medicationName, dosage, day, time, stock, image };
+    navigation.navigate('Home', { newMedication: medication });
   };
 
-  const hideDatePicker = () => {
-    setDatePickerVisibility(false);
+  const handleImageOptionChange = (option) => {
+    setSelectedOption(option);
+    // Limpa a imagem e o source ao mudar a opção
+    setImage('');
+    setImageSource(null);
   };
 
-  const handleConfirm = (date) => {
-    hideDatePicker();
-    setReminderTime(date);
-  };
+  const handlePickImage = async () => {
+    let result;
+    if (selectedOption === 'image') {
+      result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+    } else {
+      result = await ImagePicker.launchCameraAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+    }
 
-  const saveMedication = () => {
-    // Aqui você pode salvar os detalhes do medicamento no banco de dados
-    // E configurar o lembrete se estiver ativado (usando a data em reminderTime)
-    console.log('Medicamento salvo:', medicationName, currentQuantity, isReminderEnabled, reminderTime);
-    navigation.goBack();
+    if (!result.cancelled) {
+      setImage(result.uri);
+      setImageSource(result);
+    }
   };
 
   return (
     <View style={styles.container}>
-      <View style={styles.formContainer}>
-        <Text style={styles.label}>Nome do Medicamento</Text>
+      <Text style={styles.label}>Nome do Medicamento:</Text>
+      <TextInput
+        style={styles.input}
+        value={medicationName}
+        onChangeText={(text) => setMedicationName(text)}
+        placeholder="Digite o nome do medicamento"
+      />
+
+      <Text style={styles.label}>Dosagem:</Text>
+      <TextInput
+        style={styles.input}
+        value={dosage}
+        onChangeText={(text) => setDosage(text)}
+        placeholder="Digite a dosagem"
+      />
+
+      <Text style={styles.label}>Dia:</Text>
+      <TextInput
+        style={styles.input}
+        value={day}
+        onChangeText={(text) => setDay(text)}
+        placeholder="Digite o dia"
+      />
+
+      <Text style={styles.label}>Hora:</Text>
+      <TextInput
+        style={styles.input}
+        value={time}
+        onChangeText={(text) => setTime(text)}
+        placeholder="Digite a hora"
+      />
+
+      <Text style={styles.label}>Estoque:</Text>
+      <TextInput
+        style={styles.input}
+        value={stock.toString()}
+        onChangeText={(text) => setStock(text)}
+        placeholder="Digite o estoque"
+        keyboardType="numeric"
+      />
+
+      <Text style={styles.label}>Enviar Imagem:</Text>
+      <Picker
+        selectedValue={selectedOption}
+        style={styles.picker}
+        onValueChange={(itemValue) => handleImageOptionChange(itemValue)}
+      >
+        <Picker.Item label="Enviar Imagem" value="image" />
+        <Picker.Item label="Enviar URL da Imagem" value="url" />
+      </Picker>
+
+      {selectedOption === 'url' ? (
         <TextInput
           style={styles.input}
-          placeholder="Digite o nome do medicamento"
-          value={medicationName}
-          onChangeText={(text) => setMedicationName(text)}
+          value={image}
+          onChangeText={(text) => setImage(text)}
+          placeholder="Digite a URL da imagem"
+          keyboardType="url"
         />
-
-        <Text style={styles.label}>Quantidade Atual</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Digite a quantidade atual"
-          keyboardType="numeric"
-          value={currentQuantity}
-          onChangeText={(text) => setCurrentQuantity(text)}
-        />
-
-        <View style={styles.switchContainer}>
-          <Text style={styles.label}>Ativar Lembrete</Text>
-          <Switch value={isReminderEnabled} onValueChange={() => setIsReminderEnabled(!isReminderEnabled)} />
-        </View>
-
-        {isReminderEnabled && (
-          <TouchableOpacity style={styles.dateButton} onPress={showDatePicker}>
-            <Text style={styles.buttonText}>Selecionar Horário do Lembrete</Text>
+      ) : (
+        <View>
+          <TouchableOpacity style={styles.button} onPress={handlePickImage}>
+            <Text style={styles.buttonText}>Escolher Imagem</Text>
           </TouchableOpacity>
-        )}
+          {imageSource && (
+            <Text style={styles.imageText}>Imagem selecionada: {imageSource.uri}</Text>
+          )}
+        </View>
+      )}
 
-        <DateTimePickerModal
-          isVisible={isDatePickerVisible}
-          mode="time"
-          onConfirm={handleConfirm}
-          onCancel={hideDatePicker}
-        />
-      </View>
-
-      <TouchableOpacity style={styles.saveButton} onPress={saveMedication}>
-        <Text style={styles.buttonText}>Finalizar Tarefa</Text>
+      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+        <Text style={styles.buttonText}>Enviar</Text>
       </TouchableOpacity>
     </View>
   );
@@ -79,43 +131,42 @@ const AddMedication = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF',
-    paddingHorizontal: 20,
-    paddingTop: 40,
-  },
-  formContainer: {
-    marginBottom: 20,
+    justifyContent: 'center',
+    padding: 20,
+    backgroundColor: '#fff',
   },
   label: {
-    fontSize: 16,
-    marginBottom: 8,
+    fontSize: 18,
+    marginBottom: 5,
+    color: '#333',
   },
   input: {
-    borderBottomWidth: 1,
     height: 40,
-    marginBottom: 20,
-    fontSize: 16,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginBottom: 10,
+    paddingHorizontal: 10,
   },
-  switchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 20,
+  picker: {
+    height: 40,
+    marginBottom: 10,
   },
-  dateButton: {
-    backgroundColor: '#FF6EC7',
-    borderRadius: 8,
-    paddingVertical: 10,
+  button: {
+    backgroundColor: '#3498db',
+    padding: 10,
+    borderRadius: 5,
     alignItems: 'center',
-  },
-  saveButton: {
-    backgroundColor: '#FF6EC7',
-    borderRadius: 8,
-    paddingVertical: 12,
-    alignItems: 'center',
+    marginBottom: 10,
   },
   buttonText: {
-    color: '#FFF',
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  imageText: {
+    marginTop: 10,
     fontSize: 16,
+    color: '#333',
   },
 });
 

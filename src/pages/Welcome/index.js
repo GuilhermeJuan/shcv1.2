@@ -19,7 +19,7 @@ export default function Welcome() {
             <View style={styles.containerLogo}>
                 <Animatable.Image
                     animation="flipInY"
-                    source={require('../../../assets/IMG-R (11).jpg')}
+                    source={require('../../../assets/LogomarcaOFC.jpg')}
                     style={styles.logoImage}
                     resizeMode="contain"
                 />
@@ -87,8 +87,8 @@ const styles = StyleSheet.create({
         fontWeight:'bold'
     },
     logoImage: {
-        width: 200, // Defina a largura da imagem conforme necessário
-        height: 200, // Defina a altura da imagem conforme necessário
+        width: 360, // Defina a largura da imagem conforme necessário
+        height: 360, // Defina a altura da imagem conforme necessário
         borderRadius: 100, // Faz a imagem aparecer redonda
         
     },

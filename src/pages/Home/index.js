@@ -1,140 +1,201 @@
-import React, { useState } from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
-import Modal from 'react-native-modal';
-import LinearGradient from 'expo-linear-gradient';
+import React, { useState, useRef } from 'react';
+import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, Switch, Animated } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import * as Animatable from 'react-native-animatable';
 
-const Home = ({ navigation }) => {
-  const [isModalVisible, setModalVisible] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const userName = "Thales Juan";
+const HomeScreen = ({ navigation }) => {
+    const [isLogoClicked, setIsLogoClicked] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(true);
+    const userName = "Thales Juan";
 
-  const toggleModal = () => {
-    setModalVisible(!isModalVisible);
-  };
+    const [medications, setMedications] = useState([
+        { name: 'Remédio 1', dosage: '2 pílulas', day: 'Diária', time: '13:00, 21:00', id: '1' },
+        { name: 'Remédio 2', dosage: '1 pílula', day: 'Seg., Quar. e Sex.', time: '10:00', id: '2' },
+    ]);
 
-  const handleMenuItemPress = (item) => {
-    if (item.key === 'remedio') {
-      alert('Adicionar Medicamentos');
-      navigation.navigate('GerenciamentoMedicamentos')
+    const Logo = Animatable.createAnimatableComponent(Image);
 
-    } else if (item.key === 'paciente') {
-      alert('Adicionar Paciente');
+    const rotateClockwise = {
+        0: {
+            transform: [{ rotate: '0deg' }],
+        },
+        1: {
+            transform: [{ rotate: '360deg' }],
+        },
+    };
 
-    } else if (item.key === 'agenda') {
-      alert('Ver Agenda');
-      navigation.navigate('Agenda');
-      
-    } else if (item.key === 'sair') {
-      setIsLoggedIn(false);
-      navigation.navigate('Welcome');
-    }
+    const rotateCounterClockwise = {
+        0: {
+            transform: [{ rotate: '0deg' }],
+        },
+        1: {
+            transform: [{ rotate: '-360deg' }],
+        },
+    };
 
-    setModalVisible(false);
-  };
+    const [imageHeight, setImageHeight] = useState(new Animated.Value(0));
+    const imageRef = useRef(null);
 
-  const data = [
-    { key: 'remedio', label: 'Adicionar medicamnetos' },
-    { key: 'paciente', label: 'Adicionar Paciente' },
-    { key: 'agenda', label: 'Ver Agenda' },
-    { key: 'sair', label: 'Sair' },
-  ];
+    const handleImageToggle = () => {
+        Animated.timing(imageHeight, {
+            toValue: imageHeight._value === 0 ? 200 : 0,
+            duration: 500,
+            useNativeDriver: false,
+        }).start();
+    };
 
-  return (
-    <View style={styles.container}>
-      <View style={styles.greetingContainer}>
-        <Text style={styles.greetingText}>
-          Olá, {isLoggedIn ? `${userName}` : 'bem vindo(a)'}
-        </Text>
-      </View>
+    const handleLogoClick = () => {
+        setIsLogoClicked(!isLogoClicked);
+        if (imageRef.current) {
+            imageRef.current.fadeOut();
+        }
+    };
 
-      <Animatable.View animation="flipInY"> {/* Adicione a animação de flip aqui */}
-        <Image
-          source={require('../../../assets/IMG-R (10).jpg')} // Certifique-se de fornecer o caminho correto para a sua imagem
-          style={styles.image}
-        />
-      </Animatable.View>
-
-      <TouchableOpacity style={styles.addButton} onPress={toggleModal}>
-        <FontAwesome name="plus" size={30} color="white" />
-      </TouchableOpacity>
-
-      <Modal
-        isVisible={isModalVisible}
-        onBackdropPress={toggleModal}
-        backdropOpacity={0.5}
-        animationIn="slideInUp"
-        animationOut="slideOutDown"
-      >
-        <View style={styles.modalContainer}>
-          <Text style={styles.modalTitle}>Escolha uma opção:</Text>
-          {data.map((item) => (
-            <TouchableOpacity
-              key={item.key}
-              style={styles.optionButton}
-              onPress={() => handleMenuItemPress(item)}
-            >
-              <Text style={styles.optionButtonText}>{item.label}</Text>
-            </TouchableOpacity>
-          ))}
+    return (
+        <View style={styles.container}>
+            <View style={styles.header}>
+                <TouchableOpacity onPress={handleLogoClick}>
+                    <Logo
+                        ref={imageRef}
+                        source={require('../../../assets/LogomarcaOFC.jpg')}
+                        style={styles.logo}
+                        animation={isLogoClicked ? rotateCounterClockwise : rotateClockwise}
+                        duration={1000}
+                        useNativeDriver
+                    />
+                </TouchableOpacity>
+                {isLogoClicked && (
+                    <Animatable.Text animation="fadeIn" duration={1000} style={styles.appName}>
+                        Saúde na Hora Certa
+                    </Animatable.Text>
+                )}
+                <Ionicons name="menu-outline" size={32} color="black" />
+            </View>
+            <View style={styles.greetingContainer}>
+                <Text style={styles.greetingText}>
+                    Olá, {isLoggedIn ? `${userName}, bem vindo(a)` : 'bem vindo(a)'}
+                </Text>
+            </View>
+            <Text style={styles.title}>Seus remédios:</Text>
+            <FlatList
+                data={medications}
+                renderItem={({ item }) => (
+                    <View style={styles.item}>
+                        <Text style={styles.itemText}>{item.name}</Text>
+                        <Text style={styles.itemText}>{item.dosage}</Text>
+                        <Text style={styles.itemText}>Dia: {item.day}</Text>
+                        <Text style={styles.itemText}>Hora: {item.time}</Text>
+                        <View style={styles.buttonContainer}>
+                            <TouchableOpacity style={styles.button} onPress={handleImageToggle}>
+                                <Text style={styles.buttonText}>Ver Imagem</Text>
+                            </TouchableOpacity>
+                            <View style={styles.switchContainer}>
+                                <Text style={styles.switchText}>Lembrete</Text>
+                                <Switch />
+                            </View>
+                        </View>
+                        <Animated.Image
+                            style={{ height: imageHeight, width: '100%' }}
+                            source={{ uri: 'https://static.shop-pharmacie.fr/images/F10000681-p1.jpg' }}
+                        />
+                        <TouchableOpacity
+                            style={styles.editButton}
+                            onPress={() => navigation.navigate('GerenciamentoMedicamentos')}
+                        >
+                            <Text style={styles.editButtonText}>Editar informações</Text>
+                        </TouchableOpacity>
+                    </View>
+                )}
+            />
         </View>
-      </Modal>
-    </View>
-  );
+    );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-  },
-  greetingContainer: {
-    position: 'absolute',
-    top: 20,
-    left: 20,
-  },
-  greetingText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  addButton: {
-    backgroundColor: '#007bff',
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'absolute',
-    bottom: 20,
-    right: 20,
-  },
-  modalContainer: {
-    backgroundColor: 'white',
-    padding: 20,
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  optionButton: {
-    paddingVertical: 8,
-  },
-  optionButtonText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  image: {
-    width: 200, // Defina a largura da imagem conforme necessário
-    height: 200, // Defina a altura da imagem conforme necessário
-    resizeMode: 'cover', // Ou use 'contain' para outro tipo de redimensionamento
-    marginBottom: 20, // Adapte a margem inferior conforme necessário
-  },
+    container: {
+        flex: 1,
+        padding: 10,
+        backgroundColor: '#f7f7f7',
+    },
+    header: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 20,
+    },
+    logo: {
+        width: 60,
+        height: 60,
+        borderRadius: 30,
+    },
+    appName: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        marginBottom: 20,
+    },
+    greetingContainer: {
+        marginBottom: 20,
+    },
+    greetingText: {
+        fontSize: 18,
+    },
+    title: {
+        fontSize: 20,
+        marginTop: 10,
+        marginBottom: 10,
+        fontWeight: 'bold',
+    },
+    item: {
+        borderWidth: 1,
+        borderRadius: 10,
+        padding: 10,
+        marginBottom: 10,
+        backgroundColor: 'white',
+    },
+    itemText: {
+        fontSize: 16,
+        marginBottom: 5,
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    button: {
+        backgroundColor: '#0b203d',
+        borderRadius: 4,
+        paddingVertical: 8,
+        paddingHorizontal: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 10,
+    },
+    buttonText: {
+        color: '#FFF',
+        fontSize: 14,
+        fontWeight: 'bold',
+    },
+    switchContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    switchText: {
+        fontSize: 16,
+        marginRight: 5,
+    },
+    editButton: {
+        backgroundColor: '#0b203d',
+        borderRadius: 4,
+        paddingVertical: 8,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    editButtonText: {
+        color: '#FFF',
+        fontSize: 14,
+        fontWeight: 'bold',
+    },
 });
 
-export default Home;
+export default HomeScreen;
