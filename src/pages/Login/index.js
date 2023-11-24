@@ -20,12 +20,12 @@ export default function Login({ navigation }) {
           <Text style={styles.buttonText}>Acessar</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.buttonGoHome} onPress={() => navigation.navigate('Home')}>
-          <Text style={styles.buttonTextBack}>Não quero me cadastrar agora!</Text>
+        <TouchableOpacity style={styles.buttonGoHome} onPress={() => navigation.navigate('Register')}>
+          <Text style={styles.buttonTextBack}>Não possui uma conta?? Quero me cadastrar!</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.buttonRegister} onPress={() => navigation.navigate('Register')}>
-          <Text style={styles.registerText}>Não possui uma conta?? Quero me cadastrar!</Text>
+        <TouchableOpacity style={styles.buttonRegister} onPress={() => navigation.navigate('Welcome')}>
+          <Text style={styles.registerText}>Voltar</Text>
         </TouchableOpacity>
       </Animatable.View>
     </View>

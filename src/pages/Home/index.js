@@ -1,12 +1,14 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, Switch, Animated } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, Switch, Animated, Modal, BackHandler } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as Animatable from 'react-native-animatable';
+import { BlurView } from 'expo-blur';
 
 const HomeScreen = ({ navigation }) => {
     const [isLogoClicked, setIsLogoClicked] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(true);
     const userName = "Thales Juan";
+    const [isMenuVisible, setIsMenuVisible] = useState(false);
 
     const [medications, setMedications] = useState([
         { name: 'Remédio 1', dosage: '2 pílulas', day: 'Diária', time: '13:00, 21:00', id: '1' },
@@ -51,6 +53,10 @@ const HomeScreen = ({ navigation }) => {
         }
     };
 
+    const toggleMenu = () => {
+        setIsMenuVisible(!isMenuVisible);
+    };
+
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -69,7 +75,9 @@ const HomeScreen = ({ navigation }) => {
                         Saúde na Hora Certa
                     </Animatable.Text>
                 )}
-                <Ionicons name="menu-outline" size={32} color="black" />
+                <TouchableOpacity onPress={toggleMenu}>
+                    <Ionicons name="menu-outline" size={32} color="black" />
+                </TouchableOpacity>
             </View>
             <View style={styles.greetingContainer}>
                 <Text style={styles.greetingText}>
@@ -107,6 +115,35 @@ const HomeScreen = ({ navigation }) => {
                     </View>
                 )}
             />
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={isMenuVisible}
+                onRequestClose={() => {
+                    setIsMenuVisible(!isMenuVisible);
+                }}
+            >
+                <BlurView
+                    style={styles.absolute}
+                    intensity={100}
+                    tint="dark"
+                >
+                    <View style={styles.menuContainer}>
+                        <TouchableOpacity style={styles.closeButton} onPress={toggleMenu}>
+                            <Ionicons name="close-outline" size={32} color="black" />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => console.log('Perfil')}>
+                            <Text style={styles.menuItem}>Perfil</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => console.log('Configuração')}>
+                            <Text style={styles.menuItem}>Configuração</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+                            <Text style={styles.menuItem}>Sair</Text>
+                        </TouchableOpacity>
+                    </View>
+                </BlurView>
+            </Modal>
         </View>
     );
 };
@@ -195,6 +232,29 @@ const styles = StyleSheet.create({
         color: '#FFF',
         fontSize: 14,
         fontWeight: 'bold',
+    },
+    menuContainer: {
+        width: '50%',
+        height: '100%',
+        backgroundColor: '#fff',
+        padding: 20,
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        justifyContent: 'center',
+    },
+    closeButton: {
+        position: 'absolute',
+        top: 20,
+        right: 20,
+    },
+    menuItem: {
+        fontSize: 24,
+        marginVertical: 20,
+    },
+    absolute: {
+        ...StyleSheet.absoluteFillObject,
+        backgroundColor: 'transparent',
     },
 });
 
