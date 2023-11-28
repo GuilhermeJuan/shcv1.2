@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Picker } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import RNPickerSelect from 'react-native-picker-select';
 import * as Animatable from 'react-native-animatable';
 
 export default function Register({ navigation }) {
@@ -32,15 +33,16 @@ export default function Register({ navigation }) {
                 />
 
                 <Text style={styles.title}>Tipo de Usuário</Text>
-                <Picker
-                    selectedValue={userType}
-                    style={styles.input}
-                    onValueChange={(itemValue, itemIndex) => setUserType(itemValue)}
-                >
-                    <Picker.Item label="Selecione o tipo de usuário" value="" />
-                    <Picker.Item label="Paciente" value="Paciente" />
-                    <Picker.Item label="Cuidador" value="Cuidador" />
-                </Picker>
+                <RNPickerSelect
+                    style={pickerSelectStyles}
+                    onValueChange={(value) => setUserType(value)}
+                    items={[
+                        { label: 'Paciente', value: 'Paciente' },
+                        { label: 'Cuidador', value: 'Cuidador' },
+                    ]}
+                    value={userType} // use o estado aqui
+                />
+
 
                 <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Login')}>
                     <Text style={styles.buttonText}>Cadastrar</Text>
@@ -108,4 +110,27 @@ const styles = StyleSheet.create({
     registerText: {
         color: '#a1a1a1'
     }
+});
+
+const pickerSelectStyles = StyleSheet.create({
+    inputIOS: {
+        fontSize: 16,
+        paddingVertical: 12,
+        paddingHorizontal: 10,
+        borderWidth: 1,
+        borderColor: 'gray',
+        borderRadius: 4,
+        color: 'black',
+        paddingRight: 30, // to ensure the text is never behind the icon
+    },
+    inputAndroid: {
+        fontSize: 16,
+        paddingHorizontal: 10,
+        paddingVertical: 8,
+        borderWidth: 0.5,
+        borderColor: 'purple',
+        borderRadius: 8,
+        color: 'black',
+        paddingRight: 30, // to ensure the text is never behind the icon
+    },
 });

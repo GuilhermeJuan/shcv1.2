@@ -21,7 +21,7 @@ export default function Login({ navigation }) {
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.buttonGoHome} onPress={() => navigation.navigate('Register')}>
-          <Text style={styles.buttonTextBack}>Não possui uma conta?? Quero me cadastrar!</Text>
+          <Text style={styles.buttonTextBack}>Quero me cadastrar!</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.buttonRegister} onPress={() => navigation.navigate('Welcome')}>
